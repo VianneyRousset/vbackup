@@ -10,31 +10,45 @@ if [[ $? -ne 4 ]]; then
 	exit 1
 fi
 
-VERSION="0.0.1"
+VERSION="xxx"
 
 # options
-LONGOPTS="quiet,version"
-OPTIONS="q"
+LONGOPTS="help,quiet,version"
+OPTIONS="hq"
 
 # parse options
 PARSED=$(getopt --options=$OPTIONS --longoptions=$LONGOPTS --name "$0" -- "$@") || exit 2
 eval set -- "$PARSED"
 
 opt_quiet=false
-opt_version=false
 
 # now enjoy the options in order and nicely split until we see --
 while true; do
 	case "$1" in
+
+	# print help
+	-h | --help)
+		echo "Backup the system."
+		echo ""
+		echo "Usage:"
+		echo "  vbackup [OPTION]"
+		echo ""
+		echo "Options:"
+		echo "  -h, --help   Print usage"
+		echo "  -q, --quiet  Be quiet"
+		echo "  --version    Print version"
+		exit 0
+		;;
 
 	-q | --quiet)
 		opt_quiet=true
 		shift
 		;;
 
+	# print version
 	--version)
-		opt_version=true
-		shift
+		echo "$VERSION"
+		exit 0
 		;;
 
 	--)
@@ -49,6 +63,14 @@ while true; do
 
 	esac
 done
+
+# print version
+if [ "$opt_version" = true ]; then
+	exit 0
+fi
+
+echo fin
+exit 1
 
 echo $opt_quiet
 echo $opt_version

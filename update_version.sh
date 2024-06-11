@@ -2,6 +2,8 @@
 
 # https://reemus.dev/tldr/git-tag-versioning-script
 
+SCRIPT_FILE="vbackup.sh"
+
 # Exit script if command fails or uninitialized variables used
 set -euo pipefail
 
@@ -64,20 +66,10 @@ fi
 
 # ==================================
 # Update manifest file (optional)
-# assuming Rust project with Cargo.toml
-# modify this as needed for your project
 # ==================================
 
-# Update version in Cargo.toml
-sed -i "s/^version = .*/version = \"$VERSION_NEXT\"/" Cargo.toml
-
-# Update Cargo.lock as this changes when
-# updating the version in your manifest
-cargo generate-lockfile
-
-# Commit the changes
-git add .
-git commit -m "build: bump Cargo.toml version - v$VERSION_NEXT"
+# Update version in vbackup.sh
+sed -i "s/VERSION=.*/VERSION=\"$VERSION_NEXT\"/" "$SCRIPT_FILE"
 
 # ==================================
 # Create git tag for new version
@@ -85,6 +77,3 @@ git commit -m "build: bump Cargo.toml version - v$VERSION_NEXT"
 
 # Create an annotated tag
 git tag -a "v$VERSION_NEXT" -m "Release: v$VERSION_NEXT"
-
-# Optional: push commits and tag to remote 'main' branch
-git push origin main --follow-tags
